@@ -284,20 +284,20 @@ st.markdown(
 )
 
 
-# Sidebar Content
-with st.sidebar:
-    st.markdown('<div class="sidebar-title">⚡ ChatDocs</div>', unsafe_allow_html=True)
+# # Sidebar Content
+# with st.sidebar:
+#     st.markdown('<div class="sidebar-title">⚡ ChatDocs</div>', unsafe_allow_html=True)
 
-    # if st.button("💬 Home Page", use_container_width=True):
-    #     st.switch_page("chatdocs.py")
+#     if st.button("💬 Home Page", use_container_width=True):
+#         st.switch_page("chatdocs.py")
 
-    if st.button("⚙️ Login Page", use_container_width=True):
-        st.switch_page("pages/login.py")
+#     if st.button("⚙️ Login", use_container_width=True):
+#         st.switch_page("pages/login.py")
 
-    if st.button("🔐 Admin Login", use_container_width=True):
-        st.switch_page("pages/admin_login.py")
+#     if st.button("🔐 Admin Login", use_container_width=True):
+#         st.switch_page("pages/admin_login.py")
 
-    st.markdown("---")  # Divider Line
+#     st.markdown("---")  # Divider Line
 
 
 st.sidebar.title("📜 Chat History")
@@ -433,7 +433,7 @@ if "user_id" in st.session_state and st.session_state["user_id"]:
         st.session_state.clear()  # Clear session
         st.success("✅ You have been logged out.")
         time.sleep(2)  # Wait for 2 seconds to show the message
-        st.rerun()  # Refresh the page
+        st.switch_page("chatdocs.py") 
 
 # 🔹 Center Login Form and Make it Full Width
 st.markdown(

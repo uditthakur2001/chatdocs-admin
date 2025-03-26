@@ -95,14 +95,14 @@ st.markdown(
 with st.sidebar:
     st.markdown('<div class="sidebar-title">⚡ ChatDocs</div>', unsafe_allow_html=True)
 
-    if st.button("💬 ChatDocs", use_container_width=True):
+    if st.button("💬 Home Page", use_container_width=True):
         st.switch_page("chatdocs.py")
 
-    # if st.button("⚙️ Admin Panel", use_container_width=True):
-    #     st.switch_page("pages/admin_panel.py")
+    if st.button("⚙️ Login Page", use_container_width=True):
+        st.switch_page("pages/login.py")
 
-    if st.button("🔐 Admin Login", use_container_width=True):
-        st.switch_page("pages/admin_login.py")
+    # if st.button("🔐 Admin Login", use_container_width=True):
+    #     st.switch_page("pages/admin_login.py")
         
 st.title("👨‍💻 Admin Login")
 
