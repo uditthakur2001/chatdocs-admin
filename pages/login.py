@@ -7,7 +7,7 @@ import smtplib
 import random
 from email.mime.text import MIMEText
 # Streamlit Config
-st.set_page_config(page_title="Login", page_icon="🔑")
+st.set_page_config(page_title="Login", page_icon="🔑", initial_sidebar_state="collapsed")
 
 
 # Function to connect to PostgreSQL
@@ -231,9 +231,6 @@ with st.sidebar:
         st.switch_page("pages/admin_login.py")
 
     # st.markdown("---")  # Divider Line
-
-
-
 
 
 # Detect if the user is coming from another page

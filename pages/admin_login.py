@@ -1,7 +1,7 @@
 import streamlit as st
 
 # ✅ Ensure set_page_config is at the top
-st.set_page_config(page_title="ChatDocs", page_icon="📝")
+st.set_page_config(page_title="ChatDocs", page_icon="📝",initial_sidebar_state="collapsed")
 
 
 # Apply custom CSS to hide the default sidebar
