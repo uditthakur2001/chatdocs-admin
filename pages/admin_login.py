@@ -19,9 +19,21 @@ st.markdown(
     <style>
         /* Sidebar Styling */
         [data-testid="stSidebar"] {
+            width: 280px !important;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Light Theme Sidebar */
+        html[data-theme="light"] [data-testid="stSidebar"] {
+            background-color: #f8f9fa !important;
+            color: black;
+            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Dark Theme Sidebar */
+        html[data-theme="dark"] [data-testid="stSidebar"] {
             background-color: #1E1E1E !important;
             color: white;
-            width: 280px !important;
             box-shadow: 2px 0px 10px rgba(255, 255, 255, 0.2);
         }
 
@@ -31,6 +43,15 @@ st.markdown(
             font-weight: bold;
             text-align: center;
             padding: 15px 0;
+        }
+
+        /* Light Theme Sidebar Title */
+        html[data-theme="light"] .sidebar-title {
+            color: black;
+        }
+
+        /* Dark Theme Sidebar Title */
+        html[data-theme="dark"] .sidebar-title {
             color: white;
         }
 
@@ -39,19 +60,32 @@ st.markdown(
             padding: 12px;
             font-size: 16px;
             font-weight: bold;
-            color: white;
             text-decoration: none;
             display: block;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
             border-radius: 5px;
         }
-        .sidebar-item:hover {
+
+        /* Light Theme Sidebar Buttons */
+        html[data-theme="light"] .sidebar-item {
+            color: black;
+        }
+        html[data-theme="light"] .sidebar-item:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dark Theme Sidebar Buttons */
+        html[data-theme="dark"] .sidebar-item {
+            color: white;
+        }
+        html[data-theme="dark"] .sidebar-item:hover {
             background: rgba(255, 255, 255, 0.2);
         }
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # Sidebar Content
 with st.sidebar:

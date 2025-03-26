@@ -45,61 +45,125 @@ st.set_page_config(page_title="Admin Panel", page_icon="⚙️", layout="wide")
 st.markdown(
     """
     <style>
+        /* Hide Sidebar */
         [data-testid="stSidebar"] {display: none;}
-        
+
+        /* Navigation Button */
         .nav-button {
-            background: white; 
-            border: none; 
-            color: black; 
-            font-size: 16px; 
-            cursor: pointer; 
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
             font-weight: bold;
             margin-top: 5rem;
             padding: 12px 25px;
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-        .nav-button:hover {
+
+        /* Light Theme Button */
+        html[data-theme="light"] .nav-button {
+            background: white;
+            color: black;
+        }
+        html[data-theme="light"] .nav-button:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        html[data-theme="light"] .active {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Dark Theme Button */
+        html[data-theme="dark"] .nav-button {
+            background: #1E1E1E;
+            color: white;
+        }
+        html[data-theme="dark"] .nav-button:hover {
             background: rgba(255, 255, 255, 0.2);
         }
-        .active {
-            background: rgba(255, 255, 255, 0.4);
+        html[data-theme="dark"] .active {
+            background: rgba(255, 255, 255, 0.3);
         }
+
+        /* Dashboard Card */
         .dashboard-card {
-            color: black;
             padding: 20px;
-            background: #f8f9fa;
             border-radius: 10px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             font-size: 18px;
             font-weight: bold;
+            transition: all 0.3s ease;
         }
+
+        /* Light Theme Dashboard */
+        html[data-theme="light"] .dashboard-card {
+            background: #f8f9fa;
+            color: black;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dark Theme Dashboard */
+        html[data-theme="dark"] .dashboard-card {
+            background: #292b2c;
+            color: white;
+            box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        /* User Card */
         .user-card {
             padding: 15px;
             border-radius: 10px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+            transition: all 0.3s ease;
         }
-        .delete-btn {
-            background: red;
+
+        /* Light Theme User Card */
+        html[data-theme="light"] .user-card {
+            background: white;
+            color: black;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dark Theme User Card */
+        html[data-theme="dark"] .user-card {
+            background: #333;
             color: white;
+            box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Delete Button */
+        .delete-btn {
             border: none;
             padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
             transition: background 0.3s ease;
         }
-        .delete-btn:hover {
+
+        /* Light Theme Delete Button */
+        html[data-theme="light"] .delete-btn {
+            background: red;
+            color: white;
+        }
+        html[data-theme="light"] .delete-btn:hover {
             background: darkred;
+        }
+
+        /* Dark Theme Delete Button */
+        html[data-theme="dark"] .delete-btn {
+            background: darkred;
+            color: white;
+        }
+        html[data-theme="dark"] .delete-btn:hover {
+            background: red;
         }
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # Ensure session state exists
 if "admin_logged_in" not in st.session_state:

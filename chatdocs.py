@@ -211,17 +211,24 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-# 🔹 Always Show Sidebar
-# Custom CSS for a Beautiful Sidebar
 st.markdown(
     """
     <style>
         /* Sidebar Styling */
         [data-testid="stSidebar"] {
-            background-color: #1E1E1E !important;
-            color: white;
-            width: 280px !important;
+            width: 380px !important;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Adjust Sidebar Based on Theme */
+        html[data-theme="light"] [data-testid="stSidebar"] {
+            background-color: #f8f9fa !important; /* Light Gray */
+            color: black !important;
+            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+        html[data-theme="dark"] [data-testid="stSidebar"] {
+            background-color: #1E1E1E !important; /* Dark Mode */
+            color: white !important;
             box-shadow: 2px 0px 10px rgba(255, 255, 255, 0.2);
         }
 
@@ -231,6 +238,15 @@ st.markdown(
             font-weight: bold;
             text-align: center;
             padding: 15px 0;
+        }
+
+        /* Light Theme Sidebar Header */
+        html[data-theme="light"] .sidebar-title {
+            color: black;
+        }
+
+        /* Dark Theme Sidebar Header */
+        html[data-theme="dark"] .sidebar-title {
             color: white;
         }
 
@@ -239,19 +255,32 @@ st.markdown(
             padding: 12px;
             font-size: 16px;
             font-weight: bold;
-            color: white;
             text-decoration: none;
             display: block;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
             border-radius: 5px;
         }
-        .sidebar-item:hover {
+
+        /* Light Theme Buttons */
+        html[data-theme="light"] .sidebar-item {
+            color: black;
+        }
+        html[data-theme="light"] .sidebar-item:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dark Theme Buttons */
+        html[data-theme="dark"] .sidebar-item {
+            color: white;
+        }
+        html[data-theme="dark"] .sidebar-item:hover {
             background: rgba(255, 255, 255, 0.2);
         }
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # Sidebar Content
 with st.sidebar:
@@ -330,29 +359,54 @@ if "user_id" in st.session_state and st.session_state["user_id"]:
     admin_name = get_admin_username(st.session_state["user_id"])
     st.session_state["admin_name"] = admin_name  # Store in session
 
-    # Apply CSS for right alignment
     st.markdown(
-        """
-        <style>
+    """
+    <style>
+        /* Admin Name Styling */
         .admin-name {
             font-size: 18px;
             font-weight: bold;
         }
-        .stButton>button {
-            color: white !important;
+
+        /* Button Styling (Light & Dark Theme) */
+        .stButton > button {
             border-radius: 5px;
             border: none;
             padding: 6px 12px;
             font-weight: bold;
             cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease;
         }
-        .stButton>button:hover {
-            background: rgba(255, 255, 255, 0.2);
+
+        /* Adjust based on theme */
+        [data-testid="stAppViewContainer"] {
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+
+        /* Light Theme */
+        html[data-theme="light"] .stButton > button {
+            background-color: #ffffff;
+            color: black;
+            border: 1px solid #ccc;
+        }
+        html[data-theme="light"] .stButton > button:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Dark Theme */
+        html[data-theme="dark"] .stButton > button {
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+        }
+        html[data-theme="dark"] .stButton > button:hover {
+            background-color: #444;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 
     # Create a row layout with admin name + buttons on the right
     col1, col2 = st.columns([10, 2])  # Adjust column width to push right
@@ -435,7 +489,7 @@ def signup_form():
     if st.button("Sign Up"):
         if not new_username.strip():
             st.error("❌ Username cannot be empty!")
-        elif not re.match(r"^[a-zA-Z][a-zA-Z0-9_]*$", new_username):
+        elif not re.match(r"^[a-zA-Z][a-zA-Z0-9_ ]*$", new_username):
             st.error("❌ Username must start with a letter and can contain only letters, numbers, and underscores!")
         elif not re.match(r"^[a-zA-Z0-9._%+-]+@gmail\.com$", email):
             st.error("❌ Invalid email! Please enter a valid Gmail address (e.g., example@gmail.com).")
@@ -459,7 +513,7 @@ def forgot_password_form():
     
     if st.button("Send OTP"):
         if forgot_password(email):
-            st.success("✅ OTP sent to your email.")
+            st.success("✅ OTP sent to your email. (Please check your spam folder as well!)")
         else:
             st.error("❌ Email not found.")
 
@@ -467,13 +521,21 @@ def forgot_password_form():
     new_password = st.text_input("Password", type="password",placeholder="Enter new password")
 
     if st.button("Reset Password"):
-        if reset_password(email, int(otp), new_password):
-            st.success("✅ Password reset successful! Redirecting to login...")
-            time.sleep(1)
-            switch_to_login()
-        else:
-            st.error("❌ Invalid OTP or email.")
-
+        if not email.strip():  
+            st.error("❌ Please enter the Email id.")   
+        if not otp.strip():  
+            st.error("❌ Please enter the OTP.")  
+        elif not otp.strip().isdigit():  
+            st.error("❌ Invalid OTP. Please enter a valid numeric OTP.")  
+        elif not new_password.strip():  
+            st.error("❌ Please enter a new password.")  
+        else:  
+            if reset_password(email, int(otp), new_password):  
+                st.success("✅ Password reset successful! Redirecting to login...") 
+                time.sleep(1)
+                switch_to_login() 
+            else:  
+                st.error("❌ Invalid OTP or email.")  
     st.button("Back to Login", on_click=lambda: st.session_state.update(auth_mode="Login"))
 
 # ✅ **Render the selected form**
@@ -492,67 +554,6 @@ if not st.session_state.get("user_id"):
         st.rerun()  # Force UI refresh
 
     st.stop()
-
-
-# # 🔹 Login/Signup UI
-# if not st.session_state.get("user_id"):
-#     col1, col2 = st.columns([2, 3])
-#     with col1:
-#         st.subheader("🔑 User Panel")
-#         auth_mode = st.radio("Mode", ["Login", "Sign Up", "Forgot Password"], label_visibility="collapsed")
-
-#         if auth_mode == "Login":
-#             username = st.text_input("Username")
-#             password = st.text_input("Password", type="password")
-#             if st.button("Login"):
-#                 user_id = validate_user(username, password)
-#                 if user_id:
-#                     st.session_state["user_id"] = user_id
-#                     st.session_state["username"] = username
-#                     st.success("✅ Login successful!")
-#                     st.rerun()
-#                 else:
-#                     st.error("❌ Invalid username or password")
-#         elif auth_mode == "Sign Up":
-#             new_username = st.text_input("New Username")
-#             email = st.text_input("Email")
-#             new_password = st.text_input("New Password", type="password")
-        
-#             if st.button("Sign Up"):
-#                 if not new_username.strip():
-#                     st.error("❌ Username cannot be empty!")
-#                 elif not re.match(r"^[a-zA-Z][a-zA-Z0-9_]*$", new_username):  # Starts with letter & allows only letters, numbers, _
-#                     st.error("❌ Username must start with a letter and can contain only letters, numbers, and underscores!")
-
-#                 if not re.match(r"^[a-zA-Z0-9._%+-]+@gmail\.com$", email):
-#                     st.error("❌ Invalid email! Please enter a valid Gmail address (e.g., example@gmail.com).")
-#                 elif not new_password.strip():  # 🔹 Check Empty Password
-#                     st.error("❌ Password cannot be empty!")
-#                 elif len(new_password) < 4:  # 🔹 Check Minimum Length
-#                     st.error("❌ Password must be at least 4 characters long!")
-#                 else:
-#                     result = register_user(new_username, email, new_password)
-#                     if result == "✅ Registration successful!":
-#                         st.success("✅ Account created! Please log in.")
-#                     else:
-#                         st.error(result)
-        
-#         elif auth_mode == "Forgot Password":
-#             email = st.text_input("Enter your registered email")
-#             if st.button("Send OTP"):
-#                 if forgot_password(email):
-#                     st.success("✅ OTP sent to your email.")
-#                 else:
-#                     st.error("❌ Email not found.")
-            
-#             otp = st.text_input("Enter OTP")
-#             new_password = st.text_input("Enter new password", type="password")
-#             if st.button("Reset Password"):
-#                 if reset_password(email, int(otp), new_password):
-#                     st.success("✅ Password reset successful! Please log in.")
-#                 else:
-#                     st.error("❌ Invalid OTP or email.")
-#     st.stop()
 
 
 # ======================= Extraction of text =======================
