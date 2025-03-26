@@ -18,11 +18,30 @@ from docx import Document
 # import random
 # from email.mime.text import MIMEText
 
+from streamlit_cookies_manager import EncryptedCookieManager
 
 # ======================= Streamlit Config, API & PostgreSQL Database Connection =======================
 
 st.set_page_config(page_title="ChatDocs", page_icon="📝")
 st.title("📝 ChatDocs")
+
+# 🔒 Initialize Cookie Manager
+cookies = EncryptedCookieManager(password="udit123")
+
+if not cookies.ready():
+    st.warning("Cookies are not enabled in your browser.")
+    st.stop()
+
+# 🚪 Function to Clear Login Cookie (Logout)
+def clear_login_cookie():
+    if "logged_in" in cookies:
+        del cookies["logged_in"]  # ❌ Remove login cookie
+    if "username" in cookies:
+        del cookies["username"]  # ❌ Remove username
+    cookies.save()  # ✅ Save changes
+    st.session_state["logged_in"] = False
+
+
 
 
 # 🔹 Load API Key from Streamlit Secrets
@@ -311,6 +330,7 @@ if "user_id" in st.session_state and st.session_state["user_id"]:
 
     if logout:
         st.session_state.clear()  # Clear session
+        clear_login_cookie()
         st.success("✅ You have been logged out.")
         time.sleep(2)  # Wait for 2 seconds to show the message
         st.switch_page("chatdocs.py") 

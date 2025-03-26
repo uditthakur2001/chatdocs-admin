@@ -6,8 +6,18 @@ import re  # Import regex for email validation
 import smtplib
 import random
 from email.mime.text import MIMEText
+from streamlit_cookies_manager import EncryptedCookieManager
 # Streamlit Config
 st.set_page_config(page_title="Login", page_icon="🔑", initial_sidebar_state="collapsed")
+
+# =================== Initialize Cookie Manager ===================
+# 🔒 Initialize Cookie Manager (Set a Secret Password)
+cookies = EncryptedCookieManager(password="udit123")
+if not cookies.ready():
+    st.warning("Cookies are not enabled in your browser.")
+    st.stop()
+
+st.session_state["logged_in"] = cookies.get("logged_in") == "true"
 
 
 # Function to connect to PostgreSQL
@@ -252,23 +262,40 @@ if "auth_mode" not in st.session_state:
 if "redirect_triggered" not in st.session_state:
     st.session_state["redirect_triggered"] = False
 
+# # =================== Initialize Session State ===================
+# if "auth_mode" not in st.session_state:
+#     st.session_state["auth_mode"] = "Login"
+# if "redirect_triggered" not in st.session_state:
+#     st.session_state["redirect_triggered"] = False
+# if "logged_in" not in st.session_state:
+#     st.session_state.logged_in = cookies.get("logged_in") == "true"
+
 def switch_to_login():
     """Force switch to login mode"""
     st.session_state["auth_mode"] = "Login"
     st.session_state["redirect_triggered"] = True  # Trigger rerun
     st.rerun()
 
+def set_login_cookie():
+    """Set login status in cookies"""
+    cookies["logged_in"] = "true"  # ✅ Set login status
+    cookies["username"] = st.session_state["username"]  # Store username
+    cookies.save()  # ✅ Save changes to cookies
+    st.session_state["logged_in"] = True  # ✅ Update session state
+    
 # ✅ **Login Form**
 def login_form():
-    st.subheader("🔑 Login")
-    username = st.text_input("Username", placeholder="Enter your username")
-    password = st.text_input("Password", type="password", placeholder="Enter your password")
+    if not st.session_state.get("logged_in", False):
+        st.subheader("🔑 Login")
+        username = st.text_input("Username", placeholder="Enter your username")
+        password = st.text_input("Password", type="password", placeholder="Enter your password")
     
     if st.button("Login"):
         user_id = validate_user(username, password)
         if user_id:
             st.session_state["user_id"] = user_id
             st.session_state["username"] = username
+            set_login_cookie()
             st.success("✅ Login successful!")
             st.switch_page("pages/chatdocs2.py")
         else:
