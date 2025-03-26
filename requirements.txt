@@ -8,3 +8,4 @@ PyPDF2
 pandas
 python-docx
 langchain-community 
+streamlit_cookies_manager
