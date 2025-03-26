@@ -19,8 +19,12 @@ st.markdown(
     <style>
         /* Sidebar Styling */
         [data-testid="stSidebar"] {
-            width: 280px !important;
             transition: background 0.3s ease, box-shadow 0.3s ease;
+            min-width: 200px !important;
+            max-width: 400px !important;
+            box-shadow: 2px 0px 10px rgba(255, 255, 255, 0.2);
+            resize: horizontal; /* Allow resizing */
+            overflow: auto; /* Prevent content overflow */
         }
 
         /* Light Theme Sidebar */
