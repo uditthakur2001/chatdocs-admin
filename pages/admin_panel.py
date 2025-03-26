@@ -2,7 +2,7 @@ import streamlit as st
 import psycopg2
 import time
 
-# Function to connect to the database
+# 🔹 PostgreSQL Database Connection
 def connect_db():
     return psycopg2.connect(
         dbname=st.secrets["database"]["DB_NAME"],
@@ -11,7 +11,6 @@ def connect_db():
         host=st.secrets["database"]["DB_HOST"],
         port=st.secrets["database"]["DB_PORT"]
     )
-
 # Function to fetch all users in uppercase
 def fetch_users():
     conn = connect_db()

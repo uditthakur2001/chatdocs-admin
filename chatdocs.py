@@ -22,7 +22,7 @@ from email.mime.text import MIMEText
 
 # ======================= Streamlit Config, API & PostgreSQL Database Connection =======================
 
-st.set_page_config(page_title="ChatDocs", page_icon="📝", layout="wide")
+st.set_page_config(page_title="ChatDocs", page_icon="📝")
 st.title("📝 ChatDocs")
 
 
@@ -345,10 +345,6 @@ if "user_id" in st.session_state and st.session_state["user_id"]:
             padding: 6px 12px;
             font-weight: bold;
             cursor: pointer;
-            text-decoration: none;
-            display: block;
-            transition: background 0.3s ease;
-            border-radius: 5px;
         }
         .stButton>button:hover {
             background: rgba(255, 255, 255, 0.2);
@@ -398,65 +394,165 @@ st.markdown(
 
 # ======================= Login UI Page =======================
 
-# 🔹 Login/Signup UI
+# Initialize session state
+if "auth_mode" not in st.session_state:
+    st.session_state["auth_mode"] = "Login"
+if "redirect_triggered" not in st.session_state:
+    st.session_state["redirect_triggered"] = False
+
+def switch_to_login():
+    """Force switch to login mode"""
+    st.session_state["auth_mode"] = "Login"
+    st.session_state["redirect_triggered"] = True  # Trigger rerun
+    st.rerun()
+
+# ✅ **Login Form**
+def login_form():
+    st.subheader("🔑 Login")
+    username = st.text_input("Username", placeholder="Enter your username")
+    password = st.text_input("Password", type="password", placeholder="Enter your password")
+    
+    if st.button("Login"):
+        user_id = validate_user(username, password)
+        if user_id:
+            st.session_state["user_id"] = user_id
+            st.session_state["username"] = username
+            st.success("✅ Login successful!")
+            st.rerun()
+        else:
+            st.error("❌ Invalid username or password")
+
+    st.button("Sign Up", on_click=lambda: st.session_state.update(auth_mode="Sign Up"))
+    st.button("Forgot Password", on_click=lambda: st.session_state.update(auth_mode="Forgot Password"))
+
+# ✅ **Sign Up Form**
+def signup_form():
+    st.subheader("🆕 Sign Up")
+    new_username = st.text_input("New Username",placeholder="Enter your username")
+    email = st.text_input("Email Id",placeholder="Enter your email id")
+    new_password = st.text_input("New Password", type="password",placeholder="Enter your password")
+
+    if st.button("Sign Up"):
+        if not new_username.strip():
+            st.error("❌ Username cannot be empty!")
+        elif not re.match(r"^[a-zA-Z][a-zA-Z0-9_]*$", new_username):
+            st.error("❌ Username must start with a letter and can contain only letters, numbers, and underscores!")
+        elif not re.match(r"^[a-zA-Z0-9._%+-]+@gmail\.com$", email):
+            st.error("❌ Invalid email! Please enter a valid Gmail address (e.g., example@gmail.com).")
+        elif not new_password.strip():
+            st.error("❌ Password cannot be empty!")
+        elif len(new_password) < 4:
+            st.error("❌ Password must be at least 4 characters long!")
+        else:
+            result = register_user(new_username, email, new_password)
+            if result == "✅ Registration successful!":
+                st.success("✅ Account created! Redirecting to login...")
+                time.sleep(1)
+                switch_to_login()
+
+    st.button("Back to Login", on_click=lambda: st.session_state.update(auth_mode="Login"))
+
+# ✅ **Forgot Password Form**
+def forgot_password_form():
+    st.subheader("🔄 Forgot Password")
+    email = st.text_input("Registered Email Id",placeholder="Enter your registered email")
+    
+    if st.button("Send OTP"):
+        if forgot_password(email):
+            st.success("✅ OTP sent to your email.")
+        else:
+            st.error("❌ Email not found.")
+
+    otp = st.text_input("OTP",placeholder="Enter the received otp")
+    new_password = st.text_input("Password", type="password",placeholder="Enter new password")
+
+    if st.button("Reset Password"):
+        if reset_password(email, int(otp), new_password):
+            st.success("✅ Password reset successful! Redirecting to login...")
+            time.sleep(1)
+            switch_to_login()
+        else:
+            st.error("❌ Invalid OTP or email.")
+
+    st.button("Back to Login", on_click=lambda: st.session_state.update(auth_mode="Login"))
+
+# ✅ **Render the selected form**
 if not st.session_state.get("user_id"):
     col1, col2 = st.columns([2, 3])
     with col1:
-        st.subheader("🔑 User Panel")
-        auth_mode = st.radio("Mode", ["Login", "Sign Up", "Forgot Password"], label_visibility="collapsed")
+        if st.session_state["auth_mode"] == "Login":
+            login_form()
+        elif st.session_state["auth_mode"] == "Sign Up":
+            signup_form()
+        elif st.session_state["auth_mode"] == "Forgot Password":
+            forgot_password_form()
 
-        if auth_mode == "Login":
-            username = st.text_input("Username")
-            password = st.text_input("Password", type="password")
-            if st.button("Login"):
-                user_id = validate_user(username, password)
-                if user_id:
-                    st.session_state["user_id"] = user_id
-                    st.session_state["username"] = username
-                    st.success("✅ Login successful!")
-                    st.rerun()
-                else:
-                    st.error("❌ Invalid username or password")
-        elif auth_mode == "Sign Up":
-            new_username = st.text_input("New Username")
-            email = st.text_input("Email")
-            new_password = st.text_input("New Password", type="password")
-        
-            if st.button("Sign Up"):
-                if not new_username.strip():
-                    st.error("❌ Username cannot be empty!")
-                elif not re.match(r"^[a-zA-Z][a-zA-Z0-9_]*$", new_username):  # Starts with letter & allows only letters, numbers, _
-                    st.error("❌ Username must start with a letter and can contain only letters, numbers, and underscores!")
+    if st.session_state["redirect_triggered"]:
+        st.session_state["redirect_triggered"] = False  # Reset flag
+        st.rerun()  # Force UI refresh
 
-                if not re.match(r"^[a-zA-Z0-9._%+-]+@gmail\.com$", email):
-                    st.error("❌ Invalid email! Please enter a valid Gmail address (e.g., example@gmail.com).")
-                elif not new_password.strip():  # 🔹 Check Empty Password
-                    st.error("❌ Password cannot be empty!")
-                elif len(new_password) < 4:  # 🔹 Check Minimum Length
-                    st.error("❌ Password must be at least 4 characters long!")
-                else:
-                    result = register_user(new_username, email, new_password)
-                    if result == "✅ Registration successful!":
-                        st.success("✅ Account created! Please log in.")
-                    else:
-                        st.error(result)
-        
-        elif auth_mode == "Forgot Password":
-            email = st.text_input("Enter your registered email")
-            if st.button("Send OTP"):
-                if forgot_password(email):
-                    st.success("✅ OTP sent to your email.")
-                else:
-                    st.error("❌ Email not found.")
-            
-            otp = st.text_input("Enter OTP")
-            new_password = st.text_input("Enter new password", type="password")
-            if st.button("Reset Password"):
-                if reset_password(email, int(otp), new_password):
-                    st.success("✅ Password reset successful! Please log in.")
-                else:
-                    st.error("❌ Invalid OTP or email.")
     st.stop()
+
+
+# # 🔹 Login/Signup UI
+# if not st.session_state.get("user_id"):
+#     col1, col2 = st.columns([2, 3])
+#     with col1:
+#         st.subheader("🔑 User Panel")
+#         auth_mode = st.radio("Mode", ["Login", "Sign Up", "Forgot Password"], label_visibility="collapsed")
+
+#         if auth_mode == "Login":
+#             username = st.text_input("Username")
+#             password = st.text_input("Password", type="password")
+#             if st.button("Login"):
+#                 user_id = validate_user(username, password)
+#                 if user_id:
+#                     st.session_state["user_id"] = user_id
+#                     st.session_state["username"] = username
+#                     st.success("✅ Login successful!")
+#                     st.rerun()
+#                 else:
+#                     st.error("❌ Invalid username or password")
+#         elif auth_mode == "Sign Up":
+#             new_username = st.text_input("New Username")
+#             email = st.text_input("Email")
+#             new_password = st.text_input("New Password", type="password")
+        
+#             if st.button("Sign Up"):
+#                 if not new_username.strip():
+#                     st.error("❌ Username cannot be empty!")
+#                 elif not re.match(r"^[a-zA-Z][a-zA-Z0-9_]*$", new_username):  # Starts with letter & allows only letters, numbers, _
+#                     st.error("❌ Username must start with a letter and can contain only letters, numbers, and underscores!")
+
+#                 if not re.match(r"^[a-zA-Z0-9._%+-]+@gmail\.com$", email):
+#                     st.error("❌ Invalid email! Please enter a valid Gmail address (e.g., example@gmail.com).")
+#                 elif not new_password.strip():  # 🔹 Check Empty Password
+#                     st.error("❌ Password cannot be empty!")
+#                 elif len(new_password) < 4:  # 🔹 Check Minimum Length
+#                     st.error("❌ Password must be at least 4 characters long!")
+#                 else:
+#                     result = register_user(new_username, email, new_password)
+#                     if result == "✅ Registration successful!":
+#                         st.success("✅ Account created! Please log in.")
+#                     else:
+#                         st.error(result)
+        
+#         elif auth_mode == "Forgot Password":
+#             email = st.text_input("Enter your registered email")
+#             if st.button("Send OTP"):
+#                 if forgot_password(email):
+#                     st.success("✅ OTP sent to your email.")
+#                 else:
+#                     st.error("❌ Email not found.")
+            
+#             otp = st.text_input("Enter OTP")
+#             new_password = st.text_input("Enter new password", type="password")
+#             if st.button("Reset Password"):
+#                 if reset_password(email, int(otp), new_password):
+#                     st.success("✅ Password reset successful! Please log in.")
+#                 else:
+#                     st.error("❌ Invalid OTP or email.")
+#     st.stop()
 
 
 # ======================= Extraction of text =======================

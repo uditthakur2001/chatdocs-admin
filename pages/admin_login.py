@@ -1,8 +1,7 @@
 import streamlit as st
 
 # ✅ Ensure set_page_config is at the top
-# st.set_page_config(page_title="Admin Login", page_icon="👑")
-st.set_page_config(page_title="ChatDocs", page_icon="📝", layout="wide")
+st.set_page_config(page_title="ChatDocs", page_icon="📝")
 
 
 # Apply custom CSS to hide the default sidebar
@@ -78,8 +77,8 @@ ADMIN_CREDENTIALS = {
     "admin": "admin123",  # Example: admin username & password
 }
 
-username = st.text_input("Admin Username")
-password = st.text_input("Admin Password", type="password")
+username = st.text_input("Admin Username", placeholder="Enter admin name")
+password = st.text_input("Admin Password", type="password", placeholder="Enter admin password")
 
 if st.button("Login"):
     if username in ADMIN_CREDENTIALS and password == ADMIN_CREDENTIALS[username]:
