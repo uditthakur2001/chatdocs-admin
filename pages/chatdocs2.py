@@ -299,6 +299,11 @@ st.markdown(
 
 #     st.markdown("---")  # Divider Line
 
+st.session_state["current_page"] = "chatdocs"
+
+# if st.button("Go Back"):
+#     st.session_state["previous_page"] = "chatdocs"
+#     st.switch_page("pages/login.py")  # Redirects to login page
 
 st.sidebar.title("📜 Chat History")
 

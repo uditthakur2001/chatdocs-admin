@@ -7,7 +7,8 @@ import smtplib
 import random
 from email.mime.text import MIMEText
 # Streamlit Config
-st.set_page_config(page_title="ChatDocs - Login", page_icon="🔐")
+st.set_page_config(page_title="Login", page_icon="🔑")
+
 
 # Function to connect to PostgreSQL
 def connect_db():
@@ -232,6 +233,18 @@ with st.sidebar:
     # st.markdown("---")  # Divider Line
 
 
+
+
+
+# Detect if the user is coming from another page
+if "current_page" in st.session_state and st.session_state["current_page"] != "login":
+    st.session_state.clear()  # Log out the user
+    st.success("✅ You have been logged out.")
+    time.sleep(2)  # Show the message for 2 seconds
+    st.rerun()  # Refresh the page to show the login form
+
+# Track current page
+st.session_state["current_page"] = "login"
 
 
 # ======================= Login UI Page =======================
