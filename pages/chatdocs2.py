@@ -388,7 +388,37 @@ vector_store = FAISS.from_texts(texts, embeddings)
 
 # 🔹 Question Answering
 st.subheader("Ask a Question from the Docs:")
-user_question = st.text_input("Your Question")
+
+# Function to process the question using Google Gemini AI
+def process_question(question):
+    # Replace this with your Gemini API call
+    return question  # Placeholder response
+
+# ======================= Predefined Questions for PDFs =======================
+
+predefined_questions = [
+    "What is the main topic of this document?",
+    "Summarize this document.",
+    "List the key points discussed in this document.",
+    "Are there any conclusions or recommendations in this document?",
+    "Who is the author of this document?",
+    "What are the important dates mentioned in this document?",
+    "Explain the methodology used in this document."
+]
+
+# st.subheader("🔹 Quick Questions") 
+selected_question = st.radio("Select a question:", predefined_questions, index=None)
+
+# Custom question input
+custom_question = st.text_input("Or type your own question:")
+
+# Determine which question to process
+user_question = custom_question if custom_question.strip() else selected_question
+
+if user_question:
+    response = process_question(user_question)  # Calls the function to get an answer
+    st.write("💡 Question:", response)
+
 if user_question:
     docs = vector_store.similarity_search(user_question)
     llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
