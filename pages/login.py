@@ -222,7 +222,7 @@ with st.sidebar:
     st.markdown('<div class="sidebar-title">⚡ ChatDocs</div>', unsafe_allow_html=True)
 
     if st.button("💬 Home Page", use_container_width=True):
-        st.switch_page("chatdocs.py")
+        st.switch_page("homepage.py")
 
     # if st.button("⚙️ Login ", use_container_width=True):
     #     st.switch_page("pages/login.py")
@@ -270,7 +270,7 @@ def login_form():
             st.session_state["user_id"] = user_id
             st.session_state["username"] = username
             st.success("✅ Login successful!")
-            st.switch_page("pages/chatdocs2.py")
+            st.switch_page("pages/chatpage.py")
         else:
             st.error("❌ Invalid username or password")
 

@@ -172,7 +172,7 @@ st.markdown(
 )
 
 
-st.session_state["current_page"] = "chatdocs"
+st.session_state["current_page"] = "homepage"
 
 st.sidebar.title("📜 Chat History")
 
@@ -307,7 +307,7 @@ if "user_id" in st.session_state and st.session_state["user_id"]:
         st.session_state.clear()  # Clear session
         st.success("✅ You have been logged out.")
         time.sleep(2)  # Wait for 2 seconds to show the message
-        st.switch_page("chatdocs.py") 
+        st.switch_page("homepage.py") 
 
 # 🔹 Center Login Form and Make it Full Width
 st.markdown(
