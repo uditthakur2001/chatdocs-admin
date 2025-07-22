@@ -60,36 +60,50 @@ Follow these steps to run the project locally:
 ```bash
 git clone https://github.com/uditthakur2001/chatdocs-admin.git
 cd chatdocs-admin
+```
+
 2. (Optional) Create a virtual environment
+
 bash
 Copy
 Edit
+```bash
 python -m venv venv
 # Windows:
 venv\Scripts\activate
 # macOS/Linux:
 source venv/bin/activate
+```
+
 3. Install required dependencies
 bash
 Copy
 Edit
+```bash
 pip install -r requirements.txt
+```
+
 4. Set up environment variables
 Create a .env file in the root directory and add your DB credentials:
 
 ini
 Copy
 Edit
+```bash
 POSTGRES_HOST=your_neon_host
 POSTGRES_DB=your_database_name
 POSTGRES_USER=your_username
 POSTGRES_PASSWORD=your_password
 POSTGRES_PORT=5432
+```
 5. Run the application
 bash
 Copy
 Edit
+```bash
 streamlit run main.py
+```
+
 🧠 How It Works
 Admin uploads documents via the UI.
 
