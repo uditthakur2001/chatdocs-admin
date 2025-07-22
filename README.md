@@ -38,11 +38,17 @@
 
 chatdocs-admin/
 ├── assets/ # Images and branding
+
 ├── data/ # Local documents and temporary JSONs
+
 ├── pages/ # Multi-page components for Streamlit
+
 ├── utils/ # Utility functions (DB, FAISS, etc.)
+
 ├── main.py # Main Streamlit app entry point
+
 ├── requirements.txt # Python dependencies
+
 └── README.md # Project documentation
 
 yaml
