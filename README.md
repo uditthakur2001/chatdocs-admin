@@ -51,10 +51,6 @@ chatdocs-admin/
 
 └── README.md # Project documentation
 
-yaml
-Copy
-Edit
-
 ---
 
 ## 🚀 Getting Started
