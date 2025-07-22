@@ -1,6 +1,7 @@
-# 📁 ChatDocs Admin Panel
+# 🤖 ChatDocs – AI-Powered Document Q&A App
 
-**ChatDocs Admin** is the admin interface for managing uploaded documents and monitoring user interactions in the [ChatDocs](https://chatdocs-ai.streamlit.app/) document-based Q&A chatbot. Built with **Streamlit**, this panel enables admins to handle file uploads, manage user-specific document history, and store chat and file metadata using **PostgreSQL (Neon DB)** and **FAISS** for semantic search.
+**ChatDocs** is an intelligent AI-powered platform that allows users to upload documents and ask natural language questions about their content. Built with **Streamlit**, it combines **FAISS** for semantic search, **Google Gemini AI** for answering queries, and **PostgreSQL (Neon DB)** for persistent storage of chats and file metadata. Whether it's PDFs, Word docs, Excel sheets, or CSVs — ChatDocs helps users interact with their documents like never before.
+
 
 ---
 
