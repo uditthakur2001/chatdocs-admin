@@ -1,12 +1,12 @@
 # 📁 ChatDocs Admin Panel
 
-**ChatDocs Admin** is the admin interface for managing uploaded documents and monitoring user interactions in the [ChatDocs](https://chatdocs-app.streamlit.app/) document-based Q&A chatbot. Built with **Streamlit**, this panel enables admins to handle file uploads, manage user-specific document history, and store chat and file metadata using **PostgreSQL (Neon DB)** and **FAISS** for semantic search.
+**ChatDocs Admin** is the admin interface for managing uploaded documents and monitoring user interactions in the [ChatDocs](https://chatdocs-ai.streamlit.app/) document-based Q&A chatbot. Built with **Streamlit**, this panel enables admins to handle file uploads, manage user-specific document history, and store chat and file metadata using **PostgreSQL (Neon DB)** and **FAISS** for semantic search.
 
 ---
 
 ## 🔗 Live Apps
 
-- 💬 ChatDocs : [https://chatdocs-app.streamlit.app/](https://chatdocs-app.streamlit.app/)
+- 💬 ChatDocs : [https://chatdocs-app.streamlit.app/](https://chatdocs-ai.streamlit.app/)
 
 ---
 
